@@ -1,0 +1,36 @@
+<?php /*	
+=========================================================================================	
+|	PÁGINA DE CONSULTA DE FICHA DO CADASTRO
+|   EXIBE UM REGISTRO PARA CONSULTA OU EXCLUSÃO
+=========================================================================================	
+*/ 
+
+	$FW_tabela = "emprestimos";	
+		echo "<H1><B>IMPOSSIVEL EXCLUIR: LIVRO NAO DEVOLVIDO</B></H1><BR>";
+	
+	// VETOR COM OS NOMES DAS COLUNAS DA TABELA E OS RESPECTIVOS CAMPOS
+	global $start;
+	include_once(FW_PATH_SERV . FW_RAIZ. FW_VIEWS . $start->_controller ."/blocks/cabCampo.php");	//	INCLUI O ARQUIVO COM CABEÇALHOS E CAMPOS
+		
+	// PARA EXCLUIR ALGUM CAMPO DA VISUALIZAÇÃO USE:
+	$excluir = array();
+	// $excluir = array("id","email","cpf");
+	$FW_cab = $start->ExcluirCampo($FW_campos, $excluir );
+
+	// PREPARANDO O CAMPOS RELACIONADOS PARA SEREM APRESENTADOS  
+	$lista_usuarios = new usuariosModel();	//	Acessando o Modelo de dados dos Usuarios
+	$lista_livros = new livrosModel();	//	Acessando o Modelo de dados dos Usuarios
+
+	for ($ct=0;$ct<count($view_show_registro);$ct++) { 
+		$temp = $lista_usuarios->usuariosShow("id=".$view_show_registro[$ct]['usuario_id']);
+		$temp2 = $lista_livros->livrosShow("id=".$view_show_registro[$ct]['livro_id']);
+		
+		$view_show_registro[$ct]['usuario_id'] = $view_show_registro[$ct]['usuario_id'] . " - " . $temp[0]['nome'];
+		$view_show_registro[$ct]['livro_id'] = $view_show_registro[$ct]['livro_id'] . " - " . $temp2[0]['titulo'];	
+	}
+
+	include_once(FW_PATH_SERV . FW_SCAF_BLOCKS . "scafTableRegShow.php");							//	CHAMA O BLOCO DE CÓDIGO QUE MOSTRA O REGISTRO
+?>
+
+<BR>
+<a href="<?php echo FW_RAIZ  . $view_redir ;?>index"><img src="<?php echo FW_SCAF_IMAGE; ?>voltar.png" width="128" height="64" border="0"></a>
